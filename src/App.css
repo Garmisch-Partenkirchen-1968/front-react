@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after{
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+:root{
+    --back-color: #f0f0f0;
+    --main-color: #8d8c8a;
+    --base-color: #4e4e4e;
+    --black-color: #333333;
+    background-color: var(--back-color);
+}
+
+#root{
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+}
+html{
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+}
+body{
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.app {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+}
