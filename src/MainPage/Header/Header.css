@@ -1,0 +1,16 @@
+.header.open{
+    padding: 0; /* Padding above and below the text */
+}
+
+.header {
+    width: 100%;
+    background-color: var(--light); /* Light gray background */
+    text-align: left; /* Center the logo text */
+    padding: 20px; /* Padding above and below the text */
+    transition : padding 0.5s;
+}
+
+.logo-band h1 {
+    font-size: 2rem; /* Size of the logo text */
+    font-weight: bold; /* Make the font bold */
+}

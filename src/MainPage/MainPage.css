@@ -1,0 +1,19 @@
+.main-page{
+    width: 100%;
+}
+
+.content{
+    height: 100%;
+}
+
+.main-content.closed{
+    margin-left : 0;
+}
+
+.main-content.open{
+    margin-left : 240px;
+}
+
+.main-content {
+    transition: margin-left 0.5s;
+}

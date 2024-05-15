@@ -1,0 +1,61 @@
+.sidebar {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    height: 100%;
+    background-color: var(--darkgrey); /* 사이드바 색상 */
+    transition: width 0.5s;
+    box-shadow: inset -5px 0px 4px -5px black;
+}
+
+.sidebar.closed {
+    width: 0;
+}
+
+.toggle-button {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.5s;  /* 위치 변화에 애니메이션 효과를 줍니다 */
+    width: 6px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: inset 0px 0px 5px -3px black;
+}
+
+.sidebar.closed .toggle-button {
+    background-color: var(--darkgrey);
+    left: 10px;
+}
+
+.sidebar.open .toggle-button {
+    background-color: var(--darkgrey);
+    left: 250px;
+}
+
+.sidebar-content {
+    color: var(--light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.recent-content{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.recent-text {
+    width: 100%;
+    font-size: 14px;
+    color: var(--light);
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}

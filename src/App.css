@@ -8,11 +8,17 @@
 }
 
 :root{
-    --back-color: #f0f0f0;
-    --main-color: #8d8c8a;
-    --base-color: #4e4e4e;
-    --black-color: #333333;
-    background-color: var(--back-color);
+    --light: #f0f0f0;
+    --grey: #8d8c8a;
+    --darkgrey: #4e4e4e;
+    --semiblack: #333333;
+    --point-color: #6c63ff;
+    --point-color-sub: #007BFF;
+
+
+    --shadow-default: 0 0 8px -4px black ;
+    --shadow-inset-default: inset 0 0 8px -4px black ;
+    background-color: var(--light);
 }
 
 #root{
@@ -25,14 +31,21 @@ html{
     flex-grow: 1;
     height: 100%;
 }
-body{
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
     display: flex;
     flex-grow: 1;
+    justify-content: center;
+    align-items: center;
     height: 100%;
+    background-color: #ffffff;
 }
 
 .app {
     display: flex;
     flex-grow: 1;
     height: 100%;
+    width: 100%;
 }
