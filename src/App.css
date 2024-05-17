@@ -13,7 +13,7 @@
     --darkgrey: #4e4e4e;
     --semiblack: #333333;
     --point-color: #6c63ff;
-    --point-color-sub: #007BFF;
+    --point-color-sub: #4f49bd;
 
 
     --shadow-default: 0 0 8px -4px black ;
@@ -48,4 +48,8 @@ body {
     flex-grow: 1;
     height: 100%;
     width: 100%;
+}
+
+button i {
+    margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
 }

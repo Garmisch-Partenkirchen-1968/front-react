@@ -1,0 +1,17 @@
+.logout-button{
+    width: 100%;
+    background-color: #2f1e1e;
+    color: var(--light);
+    font-weight: bold;
+    border: none;
+    padding: 16px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: inset -5px 0px 4px -5px black;
+    transition: color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #c71111;
+    box-shadow: var(--shadow-inset-default);
+}

@@ -1,4 +1,4 @@
-.menu-button {
+.project-add-button {
     width: 100%;
     background-color: var(--darkgrey);
     color: var(--light);
@@ -11,14 +11,13 @@
     transition: color 0.3s;
 }
 
-.menu-button:hover {
+.project-add-button:hover {
     background-color: var(--point-color);
     box-shadow: inset 5px 0px 5px -5px black;
 }
 
-.menu-button.active {
-    background-color: var(--point-color);
+.project-add-button.active {
+    background-color: var(--point-color-sub);
     color : var(--light);
     box-shadow: inset 5px 0px 5px -5px black;
 }
-

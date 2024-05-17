@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './MainContent.css';
 
-function MainContent({isOpen, userInfo, projectId} ) {
+function MainContent({isOpen, userInfo, projectId, setContentType} ) {
 
     return (
         <div className={`container ${isOpen ? "open" : "closed"}`}>

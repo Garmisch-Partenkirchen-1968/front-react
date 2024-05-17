@@ -63,7 +63,7 @@
     margin-bottom: 4px;
     width: 230px;
     height: 40px;
-    background-color: var(--point-color-sub);
+    background-color: var(--point-color);
     color: white;
     border-radius: 30px;
     font-size: 16px;
@@ -80,7 +80,7 @@
     margin-bottom: 4px;
     width: 230px;
     height: 40px;
-    background-color: var(--point-color);
+    background-color: var(--point-color-sub);
     color: white;
     border-radius: 30px;
     font-size: 16px;
@@ -98,7 +98,7 @@
     margin-bottom: 4px;
     width: 230px;
     height: 40px;
-    background-color: var(--point-color);
+    background-color: var(--point-color-sub);
     color: white;
     border-radius: 30px;
     font-size: 16px;

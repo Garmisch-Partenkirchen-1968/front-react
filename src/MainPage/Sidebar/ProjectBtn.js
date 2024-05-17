@@ -1,10 +1,11 @@
 import React from 'react';
 import './ProjectBtn.css';
 
-function ProjectBtn({ title, projectId, setProjectId, isActive}) {
+function ProjectBtn({ title, projectId, setProjectId, setContentType, isActive}) {
 
     const handleClick = () => {
         setProjectId(projectId);
+        setContentType("project");
     };
 
     return (
@@ -12,6 +13,7 @@ function ProjectBtn({ title, projectId, setProjectId, isActive}) {
             onClick={handleClick}
             className={`menu-button ${isActive ? "active" : ""}`}
         >
+            <i className="fa-solid fa-file-lines"></i>
             { title }
         </button>
     );
