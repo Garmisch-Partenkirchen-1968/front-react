@@ -5,8 +5,8 @@ function LoginPage({ setUserInfo, setIsLogin }) {
     const [isSignIn, setIsSignIn] = useState(false);
     const [formData, setFormData] = useState({
         id: '',
-        password: '',
         username: '',
+        password: '',
         passwordCheck: ''
     });
 
@@ -21,8 +21,8 @@ function LoginPage({ setUserInfo, setIsLogin }) {
     // Function to handle login
     const handleLogin = async (event) => {
         event.preventDefault();
-        if (formData.id.length < 3 || formData.password.length < 3) {
-            alert("ID and Password must be at least 3 characters long.");
+        if (formData.username.length < 3 || formData.password.length < 3) {
+            alert("Username and Password must be at least 3 characters long.");
             return;
         }
         // Here you would typically send a request to your server to validate the login credentials
@@ -39,8 +39,8 @@ function LoginPage({ setUserInfo, setIsLogin }) {
     // Function to handle registration
     const handleRegister = async (event) => {
         event.preventDefault();
-        const { id, password, username, passwordCheck } = formData;
-        if (id.length < 3 || password.length < 3 || username.length < 3) {
+        const { password, username, passwordCheck } = formData;
+        if (password.length < 3 || username.length < 3) {
             alert("⚠️모든 필드는 적어도 3글자 이상이어야 합니다.");
             return;
         }
@@ -69,7 +69,6 @@ function LoginPage({ setUserInfo, setIsLogin }) {
                 <h3 className="team"> - Team03 GARMISCH1968 - </h3>
                 {(isSignIn) ? (
                     <form className="login-form" onSubmit={handleRegister}>
-                        <input className="inputfield" placeholder="ID" type="text" id="id" name="id" value={formData.id} onChange={handleInputChange} />
                         <input className="inputfield" placeholder="Username" type="text" id="username" name="username" value={formData.username} onChange={handleInputChange} />
                         <input className="inputfield" placeholder="Password" type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} />
                         <input className="inputfield" placeholder="Password Check" type="password" id="passwordCheck" name="passwordCheck" value={formData.passwordCheck} onChange={handleInputChange} />
@@ -77,7 +76,7 @@ function LoginPage({ setUserInfo, setIsLogin }) {
                     </form>
                 ) : (
                     <form className="login-form" onSubmit={handleLogin}>
-                        <input className="inputfield" placeholder="ID" type="text" id="id" name="id" value={formData.id} onChange={handleInputChange} />
+                        <input className="inputfield" placeholder="Username" type="text" id="username" name="username" value={formData.username} onChange={handleInputChange} />
                         <input className="inputfield" placeholder="Password" type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} />
                         <button type="submit" className="login-button">로그인</button>
                         <button type="button" onClick={onClickHandle} className="signup-toggle-button">회원가입</button>

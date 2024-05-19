@@ -42,7 +42,7 @@ function App() {
                         <Route path="main" element={<MainPage userInfo={userInfo} />} />
                         <Route path="project/:projectId" element={<ProjectInfoPage userInfo={userInfo} ProjectData={ProjectData}/>}/>
                         <Route path="project/:projectId/issueboard" element={<IssueBoard userInfo={userInfo} issues={ProjectData.issues}/>} />
-                        <Route path="newproject" element={<NewProjectPage />} />
+                        <Route path="newproject" element={<NewProjectPage userInfo={userInfo}/>} />
                     </Route>
                     <Route path="*" element={<Navigate to={isLogin ? "/main" : "/login"} />} />
                 </Routes>
