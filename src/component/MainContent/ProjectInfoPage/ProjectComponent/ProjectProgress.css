@@ -1,0 +1,70 @@
+.project-progress {
+    max-width: 100%;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.project-progress h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin: 8px;
+}
+
+.project-progress .progress-metrics p {
+    font-size: 16px;
+    color: #555;
+    margin: 8px;
+}
+
+.project-progress .progress-charts {
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.project-progress .bar-chart,
+.project-progress .doughnut-chart {
+    width: 25%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
+
+.issue-rate {
+    display: flex;
+    justify-content: space-around;
+}
+
+.issue-rate-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 45%;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.issue-rate-box h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.issue-rate-box p {
+    font-size: 16px;
+    color: #007bff;
+}

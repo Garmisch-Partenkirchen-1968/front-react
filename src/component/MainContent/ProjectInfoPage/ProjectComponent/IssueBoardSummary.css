@@ -1,0 +1,46 @@
+.issue-board-summary {
+    font-family: Arial, sans-serif;
+    width: 100%;
+}
+
+.view-more-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.view-more-button {
+    height: 100%;
+    margin-left: 4px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+.view-more-button:hover {
+    background-color: #0056b3;
+}
+
+.new-issue-button {
+    margin-left: 4px;
+    height: 100%;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+.new-issue-button:hover {
+    background-color: #218838;
+}

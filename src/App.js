@@ -11,6 +11,7 @@ import Layout from "./component/Layout";
 const ProjectData = {
     name: 'Project Alpha',
     description: 'This is a sample project description.',
+    startDate: new Date('2024-05-01'),
     issues: [
         { id: 1, title: 'Issue 1', description: 'Description 1', reporter: 'Alice', reportedDate: new Date('2024-05-01'), fixer: 'Bob', assignee: 'Charlie', priority: 'HIGH', status: 'NEW' },
         { id: 2, title: 'Issue 2', description: 'Description 2', reporter: 'Dave', reportedDate: new Date('2024-05-02'), fixer: 'Eve', assignee: 'Frank', priority: 'MEDIUM', status: 'CLOSED' },

@@ -100,6 +100,11 @@ const IssueBoard = ({ issues, setIssues }) => {
         setIssues([...issues, newIssue]);
     };
 
+    const handleNewIssue = () => {
+        const title = prompt('Enter issue title:');
+        if (title) addIssue(title);
+    };
+
     return (
         <div className="issue-board">
             <button className="back-button" onClick={() => navigate(`/project/${projectId}`)}>Back</button>
@@ -118,7 +123,6 @@ const IssueBoard = ({ issues, setIssues }) => {
                         <option value="status">Status</option>
                     </select>
                 </div>
-                <button className="add-issue-button" onClick={() => addIssue(prompt('Enter issue title:'))}>New Issue</button>
             </div>
             <div className="filter-controls">
                 <input
@@ -193,6 +197,7 @@ const IssueBoard = ({ issues, setIssues }) => {
                 />
                 <button className="clear-filter-button" onClick={handleFilterClear}>Filter Clear</button>
             </div>
+            <button className="new-issue-button" onClick={handleNewIssue}>New Issue</button>
             <div className="issue-list">
                 {filteredIssues.map((issue) => (
                     <IssueItem key={issue.id} issue={issue} />
