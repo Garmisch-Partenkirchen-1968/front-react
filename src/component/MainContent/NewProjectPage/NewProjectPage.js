@@ -26,7 +26,7 @@ const NewProjectPage = ({userInfo}) => {
         };
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/projects', payload);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, payload);
             console.log('Project created:', response.data);
             alert('New project created successfully!');
         } catch (error) {

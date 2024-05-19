@@ -2,23 +2,57 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './IssueBoard.css';
 import IssueItem from './IssueItem';
+import axios from "axios";
 
-const IssueBoard = ({ issues, setIssues }) => {
+const initSearchFilters = {
+    title: '',
+    description: '',
+    reporter: '',
+    fixer: '',
+    assignee: '',
+    priority: '',
+    status: '',
+    startDate: '',
+    endDate: '',
+}
+
+const initIssues = [
+    { id: 1, title: 'Issue 1', description: 'Description 1', reporter: 'Alice', reportedDate: new Date('2024-05-01'), fixer: 'Bob', assignee: 'Charlie', priority: 'HIGH', status: 'NEW' },
+    { id: 2, title: 'Issue 2', description: 'Description 2', reporter: 'Dave', reportedDate: new Date('2024-05-02'), fixer: 'Eve', assignee: 'Frank', priority: 'MEDIUM', status: 'CLOSED' },
+    { id: 3, title: 'Issue 3', description: 'Description 3', reporter: 'Grace', reportedDate: new Date('2024-05-03'), fixer: 'Heidi', assignee: 'Ivan', priority: 'LOW', status: 'FIXED' },
+    { id: 4, title: 'Issue 4', description: 'Description 4', reporter: 'Jack', reportedDate: new Date('2024-05-04'), fixer: 'Kathy', assignee: 'Leo', priority: 'CRITICAL', status: 'RESOLVED' },
+    { id: 5, title: 'Issue 5', description: 'Description 5', reporter: 'Mallory', reportedDate: new Date('2024-05-05'), fixer: 'Niaj', assignee: 'Oscar', priority: 'HIGH', status: 'ASSIGNED' },
+    { id: 6, title: 'Issue 6', description: 'Description 6', reporter: 'Pat', reportedDate: new Date('2024-05-06'), fixer: 'Quinn', assignee: 'Riley', priority: 'LOW', status: 'OPEN' },
+    { id: 7, title: 'Issue 7', description: 'Description 7', reporter: 'Sam', reportedDate: new Date('2024-05-07'), fixer: 'Trudy', assignee: 'Uma', priority: 'CRITICAL', status: 'NEW' },
+    { id: 8, title: 'Issue 8', description: 'Description 8', reporter: 'Victor', reportedDate: new Date('2024-05-08'), fixer: 'Wendy', assignee: 'Xander', priority: 'MEDIUM', status: 'ASSIGNED' },
+    { id: 9, title: 'Issue 9', description: 'Description 9', reporter: 'Yara', reportedDate: new Date('2024-05-09'), fixer: 'Zane', assignee: 'Alice', priority: 'LOW', status: 'FIXED' },
+    { id: 10, title: 'Issue 10', description: 'Description 10', reporter: 'Bob', reportedDate: new Date('2024-05-10'), fixer: 'Charlie', assignee: 'Dave', priority: 'HIGH', status: 'CLOSED' },
+];
+
+const IssueBoard = ({ userInfo }) => {
     const [sortOption, setSortOption] = useState('reportedDate');
-    const [searchFilters, setSearchFilters] = useState({
-        title: '',
-        description: '',
-        reporter: '',
-        fixer: '',
-        assignee: '',
-        priority: '',
-        status: '',
-        startDate: '',
-        endDate: '',
-    });
+    const [searchFilters, setSearchFilters] = useState(initSearchFilters);
+    const [issues, setIssues] = useState(initIssues);
     const [filteredIssues, setFilteredIssues] = useState([]);
     const navigate = useNavigate();
     const { projectId } = useParams();
+
+    useEffect(() => {
+        const fetchIssues = async () => {
+            axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues`, {
+                params : {
+                    username: userInfo.username,
+                    password: userInfo.password,
+                }
+            }).then((response) => {
+                setIssues(response.data);
+            }).catch((error) => {
+                console.error("Fail to fetch Issues : ", error);
+                setIssues(initIssues);
+            })
+        }
+        fetchIssues();
+    }, [projectId, userInfo]);
 
     useEffect(() => {
         const filtered = filterIssues(issues, searchFilters);
@@ -85,24 +119,27 @@ const IssueBoard = ({ issues, setIssues }) => {
         });
     };
 
-    const addIssue = (title) => {
-        const newIssue = {
-            id: issues.length + 1,
-            title: title,
-            description: 'New issue description',
-            reporter: 'Unknown',
-            reportedDate: new Date(),
-            fixer: 'Unknown',
-            assignee: 'Unknown',
-            priority: 'MEDIUM',
-            status: 'NEW',
-        };
-        setIssues([...issues, newIssue]);
-    };
-
     const handleNewIssue = () => {
-        const title = prompt('Enter issue title:');
-        if (title) addIssue(title);
+        //새로운 창을 띄워서 이슈 제목, 중요도를 고르게 한 후.
+        //TODO: 단순 prompt 띄우는 것이 아닌 오른쪽 새로운 대시보드 등장하도록.
+        const title = prompt("New Issue Title:");
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues`, {
+            header : {
+                //contentType json
+            },
+            params : {
+                username: userInfo.username,
+                password: userInfo.password,
+            },
+            body : {
+                title: title,
+            }
+        }).then((response) => {
+            const issueId = response.data;
+            setIssues([...issues, {issueId, title}]);
+        }).catch((error) => {
+            console.error("Fail to fetch Issues : ", error);
+        })
     };
 
     return (
