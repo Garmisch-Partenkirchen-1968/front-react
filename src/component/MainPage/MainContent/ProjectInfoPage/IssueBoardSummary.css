@@ -1,0 +1,16 @@
+.issue-board-summary {
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.issue-list-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.issue-item-summary {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0;
+}

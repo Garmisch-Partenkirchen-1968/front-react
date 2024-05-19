@@ -1,20 +1,14 @@
 import React from 'react';
 import './ProjectBtn.css';
 
-function ProjectBtn({ title, projectId, setProjectId, setContentType, isActive}) {
-
-    const handleClick = () => {
-        setProjectId(projectId);
-        setContentType("project");
-    };
-
+function ProjectBtn({ title, isActive, onNavigate }) {
     return (
         <button
-            onClick={handleClick}
+            onClick={onNavigate}
             className={`menu-button ${isActive ? "active" : ""}`}
         >
             <i className="fa-solid fa-file-lines"></i>
-            { title }
+            {title}
         </button>
     );
 }

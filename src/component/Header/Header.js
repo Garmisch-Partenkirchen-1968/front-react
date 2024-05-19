@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './Header.css'; // Assuming you will create a separate CSS file for styles
 
 

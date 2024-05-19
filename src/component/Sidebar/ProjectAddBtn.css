@@ -1,4 +1,4 @@
-.project-add-button {
+.project-add-btn {
     width: 100%;
     background-color: var(--darkgrey);
     color: var(--light);
@@ -11,12 +11,12 @@
     transition: color 0.3s;
 }
 
-.project-add-button:hover {
+.project-add-btn:hover {
     background-color: var(--point-color);
     box-shadow: inset 5px 0px 5px -5px black;
 }
 
-.project-add-button.active {
+.project-add-btn.active {
     background-color: var(--point-color-sub);
     color : var(--light);
     box-shadow: inset 5px 0px 5px -5px black;
