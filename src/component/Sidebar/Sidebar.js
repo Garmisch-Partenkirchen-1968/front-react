@@ -18,6 +18,7 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
     const location = useLocation();
     const currentProjectId = location.pathname.split('/').pop();
 
+    //TODO : userInfo를 이용해 API 콜, projectID와 projectTitle을 받아와야함
     useEffect(() => {
         const fetchProjects = async () => {
             try {

@@ -5,6 +5,7 @@ const NewProjectPage = () => {
 
     const handleCreateProject = () => {
         console.log('Creating new project:', projectTitle);
+        alert("new!");
     };
 
     return (
