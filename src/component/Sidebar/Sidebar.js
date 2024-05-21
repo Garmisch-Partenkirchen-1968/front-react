@@ -22,17 +22,21 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                     password: userInfo.password
                 }
             }).then((response) => {
-                const formattedProjects = response.data.map(project => ({
-                    projectId: project.id.toString(),
-                    projectTitle: project.title
-                }));
-                setProjects(formattedProjects);
+                if (Array.isArray(response.data)) {
+                    const formattedProjects = response.data.map(project => ({
+                        projectId: project.id.toString(),
+                        projectTitle: project.title
+                    }));
+                    setProjects(formattedProjects);
+                } else {
+                    throw new Error('Response data is not an array');
+                }
             }).catch((error) => {
                 setProjects([
-                    {projectId: "0", projectTitle: "SeaTurtle (!)"},
-                    {projectId: "1", projectTitle: "Garmisch1968!!!! (!)"},
-                    {projectId: "2", projectTitle: "GarmISSUE Manager (!)"},
-                    {projectId: "3", projectTitle: "Dae Chan Guen (!)"},
+                    { projectId: "0", projectTitle: "SeaTurtle (!)" },
+                    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
+                    { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
+                    { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
                 ]);
                 console.error('Failed to fetch projects:', error);
             });
