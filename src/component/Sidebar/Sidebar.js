@@ -17,7 +17,7 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
     useEffect(() => {
         const fetchProjects = async () => {
             axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
-                body: {
+                params: {
                     username: userInfo.username,
                     password: userInfo.password
                 }
@@ -29,26 +29,26 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                     }));
                     setProjects(formattedProjects);
                 } else {
+                    console.error('Response data is not an array');
                     setProjects([
                         { projectId: "0", projectTitle: "SeaTurtle (!)" },
                         { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
                         { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
                         { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
                     ]);
-                    console.error('Response data is not an array');
                 }
             }).catch((error) => {
+                console.error('Failed to fetch projects:', error);
                 setProjects([
                     { projectId: "0", projectTitle: "SeaTurtle (!)" },
                     { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
                     { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
                     { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
                 ]);
-                console.error('Failed to fetch projects:', error);
             });
         }
         fetchProjects();
-    }, [userInfo.token, userInfo]);
+    }, [userInfo]);
 
     useEffect(() => {
         if (isOpen) {
