@@ -36,12 +36,15 @@ const ProjectInfoPage = ({ userInfo }) => {
                     projectId: projectId
                 }
             }).then((response) => {
-                if (Array.isArray(response.data)) {
-                    console.error('Expected an object but received an array');
+                if (typeof response.data === 'string' && /<[^>]*>/.test(response.data)) {
+                    console.error('Received HTML instead of JSON');
                     setProjectData(initProjectData); // 초기 데이터로 설정
-                } else {
+                } else if (response.data && typeof response.data === 'object') {
                     console.log(response.data);
                     setProjectData(response.data);
+                } else {
+                    console.error('Expected a JSON object but received something else');
+                    setProjectData(initProjectData); // 초기 데이터로 설정
                 }
             }).catch((error) => {
                 console.error('Failed to fetch current project:', error);
