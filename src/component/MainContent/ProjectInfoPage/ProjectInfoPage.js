@@ -36,8 +36,13 @@ const ProjectInfoPage = ({ userInfo }) => {
                     projectId: projectId
                 }
             }).then((response) => {
-                console.log(response.data);
-                setProjectData(response.data);
+                if (Array.isArray(response.data)) {
+                    console.error('Expected an object but received an array');
+                    setProjectData(initProjectData); // 초기 데이터로 설정
+                } else {
+                    console.log(response.data);
+                    setProjectData(response.data);
+                }
             }).catch((error) => {
                 console.error('Failed to fetch current project:', error);
                 setProjectData(initProjectData);
