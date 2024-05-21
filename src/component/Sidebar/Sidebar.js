@@ -36,9 +36,11 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                     }));
                     setProjects(formattedProjects);
                 } else {
+                    setProjects(initProjectData);
                     console.error('Response data is not an array');
                 }
             }).catch((error) => {
+                setProjects(initProjectData);
                 console.error('Failed to fetch projects:', error);
             });
         }
