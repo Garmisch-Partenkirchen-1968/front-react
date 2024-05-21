@@ -16,7 +16,7 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            await axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
+            axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
                 body: {
                     username: userInfo.username,
                     password: userInfo.password
