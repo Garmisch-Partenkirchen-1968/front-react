@@ -33,9 +33,10 @@ const ProjectInfoPage = ({ userInfo }) => {
                 params: {
                     username: userInfo.username,
                     password: userInfo.password,
-                    projectid: projectId
+                    projectId: projectId
                 }
             }).then((response) => {
+                console.log(response.data);
                 setProjectData(response.data);
             }).catch((error) => {
                 console.error('Failed to fetch current project:', error);
