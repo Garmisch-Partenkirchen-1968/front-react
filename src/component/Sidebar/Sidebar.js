@@ -29,7 +29,13 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                     }));
                     setProjects(formattedProjects);
                 } else {
-                    throw new Error('Response data is not an array');
+                    setProjects([
+                        { projectId: "0", projectTitle: "SeaTurtle (!)" },
+                        { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
+                        { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
+                        { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
+                    ]);
+                    console.error('Response data is not an array');
                 }
             }).catch((error) => {
                 setProjects([
