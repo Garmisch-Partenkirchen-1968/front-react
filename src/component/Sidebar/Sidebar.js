@@ -6,10 +6,17 @@ import ProjectBtn from "./ProjectBtn";
 import ProjectAddBtn from "./ProjectAddBtn";
 import LogoutBtn from "./LogoutBtn";
 
+const initProjectData = [
+    { projectId: "0", projectTitle: "SeaTurtle (!)" },
+    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
+    { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
+    { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
+]
+
 function Sidebar({ userInfo, isOpen, setIsOpen }) {
     const [showContent, setShowContent] = useState(true);
     const [showProject, setShowProject] = useState(true);
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState(initProjectData);
     const navigate = useNavigate();
     const location = useLocation();
     const currentProjectId = location.pathname.split('/').pop();
@@ -30,21 +37,9 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                     setProjects(formattedProjects);
                 } else {
                     console.error('Response data is not an array');
-                    setProjects([
-                        { projectId: "0", projectTitle: "SeaTurtle (!)" },
-                        { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
-                        { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
-                        { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
-                    ]);
                 }
             }).catch((error) => {
                 console.error('Failed to fetch projects:', error);
-                setProjects([
-                    { projectId: "0", projectTitle: "SeaTurtle (!)" },
-                    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
-                    { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
-                    { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
-                ]);
             });
         }
         fetchProjects();
