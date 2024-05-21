@@ -24,7 +24,11 @@ ChartJS.register(
 );
 
 const ProjectProgress = ({ projectData }) => {
-    const { startDate, issues } = projectData;
+     // const { startDate, issues } = projectData;
+    const {startDate } = projectData;
+    const issues = [
+        { id: 1, title: 'Issue 111', description: 'Description 1', reporter: 'Alice', reportedDate: new Date('2024-05-01'), fixer: 'Bob', assignee: 'Charlie', priority: 'HIGH', status: 'NEW' },
+    ];
     const currentDate = new Date();
     const start = new Date(startDate);
     const daysElapsed = Math.ceil((currentDate - start) / (1000 * 60 * 60 * 24));
