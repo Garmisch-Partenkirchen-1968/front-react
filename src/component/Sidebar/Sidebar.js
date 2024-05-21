@@ -16,30 +16,29 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
-                    body: {
-                        username: userInfo.username,
-                        password: userInfo.password
-                    }
-                });
+            await axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
+                body: {
+                    username: userInfo.username,
+                    password: userInfo.password
+                }
+            }).then((response) => {
                 const formattedProjects = response.data.map(project => ({
                     projectId: project.id.toString(),
                     projectTitle: project.title
                 }));
                 setProjects(formattedProjects);
-            } catch (error) {
+            }).catch((error) => {
                 setProjects([
-                    { projectId: "0", projectTitle: "SeaTurtle (!)"},
-                    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)"},
-                    { projectId: "2", projectTitle: "GarmISSUE Manager (!)"},
-                    { projectId: "3", projectTitle: "Dae Chan Guen (!)"},
+                    {projectId: "0", projectTitle: "SeaTurtle (!)"},
+                    {projectId: "1", projectTitle: "Garmisch1968!!!! (!)"},
+                    {projectId: "2", projectTitle: "GarmISSUE Manager (!)"},
+                    {projectId: "3", projectTitle: "Dae Chan Guen (!)"},
                 ]);
                 console.error('Failed to fetch projects:', error);
-            }
-        };
+            });
+        }
         fetchProjects();
-    }, [userInfo.token, userInfo.id, userInfo.password]);
+    }, [userInfo.token, userInfo]);
 
     useEffect(() => {
         if (isOpen) {
