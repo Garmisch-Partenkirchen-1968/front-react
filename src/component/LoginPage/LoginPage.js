@@ -26,7 +26,7 @@ function LoginPage({ setUserInfo, setIsLogin }) {
             alert("⚠️모든 필드는 적어도 3글자 이상이어야 합니다.");
             return;
         }
-            axios.get(`${process.env.REACT_APP_API_URL}/login`, {
+            axios.get(`${process.env.REACT_APP_API_URL}/signin`, {
                 params: {
                     username: formData.username,
                     password: formData.password
@@ -38,8 +38,8 @@ function LoginPage({ setUserInfo, setIsLogin }) {
             }).catch((error) => {
                 console.error('Login failed:', error);
                 const { id, username, password } = formData;
-                setUserInfo({ username, id, password });
-                setIsLogin(true); // Set login state to true
+//                setUserInfo({ username, id, password });
+//                setIsLogin(true); // Set login state to true
             });
     };
 
@@ -54,20 +54,20 @@ function LoginPage({ setUserInfo, setIsLogin }) {
             alert("⚠️Password가 Password Check와 일치하지 않습니다.");
             return;
         }
-        try {
-//            const response = await axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
-//                params: {
-//                    username: formData.username,
-//                    password: formData.password
-//                }
-//            });
-//          console.log(response);
+        console.log(username);
+        console.log(password);
+        axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
+            body: {
+                username: username,
+                password: password
+            }
+        }).then(() => {
             alert('🎊가입을 축하드립니다!🎊');
             setIsSignIn(false);
-        } catch (error) {
+        }).catch((error) => {
             console.error('Registration failed:', error);
             alert('Registration failed, please try again.');
-        }
+        });
         setFormData(initData);
     };
 
