@@ -23,14 +23,14 @@ ChartJS.register(
     ArcElement
 );
 
-const ProjectProgress = ({ projectData }) => {
-    const { startDate, issues } = projectData;
+const ProjectProgress = ({ projectData, issueData }) => {
+    const startDate = projectData;
     const currentDate = new Date();
     const start = new Date(startDate);
     const daysElapsed = Math.ceil((currentDate - start) / (1000 * 60 * 60 * 24));
 
-    const totalIssues = issues.length;
-    const completedIssues = issues.filter(issue => issue.status === 'CLOSED' || issue.status === 'RESOLVED' || issue.status === 'FIXED').length;
+    const totalIssues = issueData.length;
+    const completedIssues = issueData.filter(issue => issue.status === 'CLOSED' || issue.status === 'RESOLVED' || issue.status === 'FIXED').length;
     const remainingIssues = totalIssues - completedIssues;
     const completionPercentage = totalIssues === 0 ? 0 : Math.round((completedIssues / totalIssues) * 100);
 
@@ -38,7 +38,7 @@ const ProjectProgress = ({ projectData }) => {
     const issuesPerMonth = issuesPerDay * 30;
 
     // Count issues by status
-    const statusCounts = issues.reduce((acc, issue) => {
+    const statusCounts = issueData.reduce((acc, issue) => {
         acc[issue.status] = (acc[issue.status] || 0) + 1;
         return acc;
     }, {});

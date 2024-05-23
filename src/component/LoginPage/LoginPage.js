@@ -32,14 +32,16 @@ function LoginPage({ setUserInfo, setIsLogin }) {
                     password: formData.password
                 }
             }).then((response) => {
-                const { id, username, password } = response.data;
-                setUserInfo({ username, id, password });
+                const id = response.data;
+                setUserInfo({ username: formData.username, id: id, password: formData.password });
                 setIsLogin(true); // Set login state to true
             }).catch((error) => {
                 console.error('Login failed:', error);
-                const { id, username, password } = formData;
-//                setUserInfo({ username, id, password });
-//                setIsLogin(true); // Set login state to true
+                if (error.response && error.response.data && error.response.data.message) {
+                    alert(error.response.data.message);
+                } else {
+                    alert('An unknown error occurred.');
+                }
             });
     };
 
@@ -54,13 +56,9 @@ function LoginPage({ setUserInfo, setIsLogin }) {
             alert("⚠️Password가 Password Check와 일치하지 않습니다.");
             return;
         }
-        console.log(username);
-        console.log(password);
         axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
-            body: {
-                username: username,
-                password: password
-            }
+            "username": username,
+            "password": password
         }).then(() => {
             alert('🎊가입을 축하드립니다!🎊');
             setIsSignIn(false);

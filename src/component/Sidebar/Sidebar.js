@@ -6,17 +6,10 @@ import ProjectBtn from "./ProjectBtn";
 import ProjectAddBtn from "./ProjectAddBtn";
 import LogoutBtn from "./LogoutBtn";
 
-const initProjectData = [
-    { projectId: "0", projectTitle: "SeaTurtle (!)" },
-    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
-    { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
-    { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
-]
 
-function Sidebar({ userInfo, isOpen, setIsOpen }) {
+function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
     const [showContent, setShowContent] = useState(true);
     const [showProject, setShowProject] = useState(true);
-    const [projects, setProjects] = useState(initProjectData);
     const navigate = useNavigate();
     const location = useLocation();
     const currentProjectId = location.pathname.split('/').pop();
@@ -32,20 +25,18 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                 if (Array.isArray(response.data)) {
                     const formattedProjects = response.data.map(project => ({
                         projectId: project.id.toString(),
-                        projectTitle: project.title
+                        projectTitle: project.name
                     }));
                     setProjects(formattedProjects);
                 } else {
-                    setProjects(initProjectData);
                     console.error('Response data is not an array');
                 }
             }).catch((error) => {
-                setProjects(initProjectData);
                 console.error('Failed to fetch projects:', error);
             });
         }
         fetchProjects();
-    }, [userInfo]);
+    }, [userInfo, projects]);
 
     useEffect(() => {
         if (isOpen) {
@@ -81,7 +72,7 @@ function Sidebar({ userInfo, isOpen, setIsOpen }) {
                                 <p className="project-text">Projects</p>
                             </button>
                             {showProject && (
-                                <div>
+                                <div className="project-item">
                                     {projects.map(item => (
                                         <ProjectBtn
                                             key={item.projectId}
