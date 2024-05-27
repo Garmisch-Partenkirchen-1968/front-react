@@ -41,7 +41,7 @@ function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
             });
         }
         fetchProjects();
-    }, [userInfo, setProjects]);
+    }, [currentProjectId, userInfo, setProjects]);
 
     useEffect(() => {
         if (isOpen) {

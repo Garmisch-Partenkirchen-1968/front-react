@@ -30,13 +30,22 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
     };
 
     const handleSubmit = () => {
+        console.log(
+            {
+                username: userInfo.username,
+                password: userInfo.password,
+                title: title,
+                priority: priority
+            }
+        );
         axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/issues`, {
             username: userInfo.username,
             password: userInfo.password,
             title: title,
             priority: priority
         }).then((response) => {
-            const issueId = response.data;
+            console.log(response.data);
+            const issueId = response.data.id;
             onIssueCreated({ id: issueId, title: title, description: "", reportedDate: new Date(), reporter: userInfo.username, status: "New", assignee: assignee, priority: priority });
             onClose();
         }).catch((error) => {

@@ -83,6 +83,7 @@ const ProjectInfoPage = ({ userInfo }) => {
                 <h1>{projectData.name}</h1>
                 <p>{projectData.description}</p>
             </div>
+            <button className="settings-button" onClick={handleSettings}>Project Settings</button>
             <ProjectProgress
                 projectData={projectData}
                 issueData={issueData} />
@@ -91,7 +92,6 @@ const ProjectInfoPage = ({ userInfo }) => {
                 maxIssuesToShow={3}
                 handleViewMore={handleViewMore}
             />
-            <button onClick={handleSettings}>Project Settings</button>
         </div>
     );
 };

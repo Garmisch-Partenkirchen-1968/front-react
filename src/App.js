@@ -10,10 +10,22 @@ import IssueBoard from "./component/MainContent/ProjectInfoPage/IssueBoard/Issue
 import Layout from "./component/Layout";
 
 const initProjectData = [
-    { projectId: "0", projectTitle: "SeaTurtle (!)" },
-    { projectId: "1", projectTitle: "Garmisch1968!!!! (!)" },
-    { projectId: "2", projectTitle: "GarmISSUE Manager (!)" },
-    { projectId: "3", projectTitle: "Dae Chan Guen (!)" },
+    {
+        id: "0",
+        name: "SeaTurtle (!)",
+        description: "sea turtle project",
+        members : {
+            "User(id=332, username=admin1, password=pw)" : 15,
+            "User(id=333, username=admin2, password=pw)" : 8,
+            "User(id=334, username=pl1, password=pw)" : 4,
+            "User(id=335, username=tester1, password=pw)" : 2,
+            "User(id=336, username=testdev1, password=pw)" : 3,
+            "User(id=337, username=dev2, password=pw)" : 1,
+        },
+    },
+    { id: "1", name: "Garmisch1968!!!! (!)" },
+    { id: "2", name: "GarmISSUE Manager (!)" },
+    { id: "3", name: "Dae Chan Guen (!)" },
 ]
 
 function App() {

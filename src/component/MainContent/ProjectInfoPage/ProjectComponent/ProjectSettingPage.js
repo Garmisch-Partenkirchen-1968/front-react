@@ -10,24 +10,29 @@ const ProjectSettingPage = ({ userInfo }) => {
     const [searchResults, setSearchResults] = useState([]);
     const navigate = useNavigate();
 
+    //TODO : project description 변경하는 로직 추가할 것
+
+
+
+    //
     useEffect(() => {
-        // Fetch existing project members
-        axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}`, {
+        axios.get(`http://localhost:8080/projects/${projectId}`, {
             params: {
                 username: userInfo.username,
                 password: userInfo.password,
             },
         }).then((response) => {
             const membersData = response.data.members;
+            console.log(membersData);
             const parsedMembers = Object.entries(membersData).map(([userString, permission]) => {
-                const userMatch = userString.match(/User\(id=(\d+), username=(\w+), password=(\w+)\)/);
+                const userMatch = userString.match(/User\(id=(\d+), username=(\w+), password=(.+)\)/);
                 if (userMatch) {
                     const [_, id, username, password] = userMatch;
                     return {
                         id: parseInt(id, 10),
                         username,
                         password,
-                        permissions: [false, false, false, Boolean(permission)],
+                        permissions: permission
                     };
                 }
                 return null;
@@ -39,7 +44,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     }, [projectId, userInfo]);
 
     const handleSearchUsers = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/users`, {
+        axios.get(`http://localhost:8080/users`, {
             params: {
                 keyword: searchQuery,
                 username: userInfo.username,
@@ -53,8 +58,8 @@ const ProjectSettingPage = ({ userInfo }) => {
     };
 
     const handleAddMember = (user) => {
-        const newMember = { ...user, permissions: [false, false, false, true] };
-        axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${user.id}`, {
+        const newMember = { ...user, permissions: 1 };
+        axios.post(`http://localhost:8080/projects/${projectId}/permissions/${user.id}`, {
             username: userInfo.username,
             password: userInfo.password,
             permissions: newMember.permissions
@@ -74,7 +79,7 @@ const ProjectSettingPage = ({ userInfo }) => {
         const updatedPermissions = [...member.permissions];
         updatedPermissions[permissionIndex] = !updatedPermissions[permissionIndex];
 
-        axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${member.id}`, {
+        axios.patch(`http://localhost:8080/projects/${projectId}/permissions/${member.id}`, {
             username: userInfo.username,
             password: userInfo.password,
             permissions: updatedPermissions,
@@ -88,7 +93,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     };
 
     const handleRemoveMember = (delMember) => {
-        axios.delete(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${delMember.id}`, {
+        axios.delete(`http://localhost:8080/projects/${projectId}/permissions/${delMember.id}`, {
             username: userInfo.username,
             password: userInfo.password,
             permissions: delMember.permissions,
@@ -101,6 +106,7 @@ const ProjectSettingPage = ({ userInfo }) => {
 
     return (
         <div className="project-setting-page">
+            <button className="back-button" onClick={() => navigate(`/project/${projectId}`)}>Back</button>
             <h1>Project Settings</h1>
             <div className="member-search">
                 <input
