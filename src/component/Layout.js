@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
 
-function Layout({ userInfo, projects, setProjects }) {
+function Layout({ userInfo, setProject, projects, setProjects }) {
     const [isOpen, setIsOpen] = useState(true);
 
     return (

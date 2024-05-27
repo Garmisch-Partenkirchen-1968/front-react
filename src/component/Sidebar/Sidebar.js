@@ -12,7 +12,10 @@ function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
     const [showProject, setShowProject] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
-    const currentProjectId = location.pathname.split('/').pop();
+    const pathSegments = location.pathname.split('/');
+    const projectIdIndex = pathSegments.indexOf('project') + 1;
+    const currentProjectId = pathSegments[projectIdIndex];
+
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -24,8 +27,10 @@ function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
             }).then((response) => {
                 if (Array.isArray(response.data)) {
                     const formattedProjects = response.data.map(project => ({
-                        projectId: project.id.toString(),
-                        projectTitle: project.name
+                        id: project.id.toString(),
+                        name: project.name,
+                        description: project.description,
+                        members: project.members
                     }));
                     setProjects(formattedProjects);
                 } else {
@@ -36,7 +41,7 @@ function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
             });
         }
         fetchProjects();
-    }, [userInfo, projects]);
+    }, [userInfo, setProjects]);
 
     useEffect(() => {
         if (isOpen) {
@@ -75,10 +80,10 @@ function Sidebar({projects, setProjects, userInfo, isOpen, setIsOpen }) {
                                 <div className="project-item">
                                     {projects.map(item => (
                                         <ProjectBtn
-                                            key={item.projectId}
-                                            title={item.projectTitle}
-                                            isActive={currentProjectId === item.projectId}
-                                            onNavigate={() => handleNavigation(`/project/${item.projectId}`)}
+                                            key={item.id}
+                                            title={item.name}
+                                            isActive={currentProjectId === item.id}
+                                            onNavigate={() => handleNavigation(`/project/${item.id}`)}
                                         />
                                     ))}
                                 </div>

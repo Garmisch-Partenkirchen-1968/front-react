@@ -1,0 +1,57 @@
+/* NewIssueComponent.css */
+.new-issue-component {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    padding: 20px;
+    z-index: 1000;
+}
+
+.new-issue-component h2 {
+    margin-top: 0;
+}
+
+.new-issue-component label {
+    display: block;
+    margin-top: 10px;
+}
+
+.new-issue-component input, .new-issue-component select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.new-issue-component button {
+    margin-top: 10px;
+    padding: 10px 15px;
+}
+
+.assignee-list {
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px;
+}
+
+.assignee-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.assignee-item input {
+    margin-right: 4px;
+    width: 20px;
+}
+
+.assignee-item label {
+    margin: 4px;
+}

@@ -73,10 +73,6 @@ const ProjectInfoPage = ({ userInfo }) => {
         navigate(`/project/${projectId}/issueboard`);
     };
 
-    const handleNewIssue = () => {
-        navigate(`/project/${projectId}/issueboard`);
-    };
-
     const handleSettings = () => {
         navigate(`/project/${projectId}/settings`);
     };
@@ -94,7 +90,6 @@ const ProjectInfoPage = ({ userInfo }) => {
                 issues={issueData}
                 maxIssuesToShow={3}
                 handleViewMore={handleViewMore}
-                handleNewIssue={handleNewIssue}
             />
             <button onClick={handleSettings}>Project Settings</button>
         </div>

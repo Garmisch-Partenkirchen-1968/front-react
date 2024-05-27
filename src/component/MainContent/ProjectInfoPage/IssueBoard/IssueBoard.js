@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './IssueBoard.css';
+import NewIssueComponent from './NewIssueComponent';
 import IssueItem from './IssueItem';
 import axios from "axios";
 
@@ -14,6 +15,17 @@ const initSearchFilters = {
     status: '',
     startDate: '',
     endDate: '',
+}
+
+const initProjectData = {
+    "id": 81,
+    "name": "Project Alpha",
+    "description": "This is alpha.",
+    "members": {
+        "User(id=332, username=admin, password=admin)": 8,
+        "User(id=333, username=dev1, password=dev1)": 1,
+        "User(id=334, username=adminPlTesterDev, password=all)": 15
+    }
 }
 
 const initIssues = [
@@ -34,13 +46,29 @@ const IssueBoard = ({ userInfo }) => {
     const [searchFilters, setSearchFilters] = useState(initSearchFilters);
     const [issues, setIssues] = useState(initIssues);
     const [filteredIssues, setFilteredIssues] = useState([]);
+    const [showNewIssue, setShowNewIssue] = useState(false);
     const navigate = useNavigate();
     const { projectId } = useParams();
+    const [project, setProject] = useState();
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}`, {
+            params: {
+                username: userInfo.username,
+                password: userInfo.password,
+            }
+        }).then((response) => {
+            setProject(response.data);
+        }).catch((error) => {
+            setProject(initProjectData);
+            console.error("Fail to fetch CurrentPage Project : ", error);
+        });
+    }, [projectId, userInfo]);
 
     useEffect(() => {
         const fetchIssues = async () => {
             axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues`, {
-                params : {
+                params: {
                     username: userInfo.username,
                     password: userInfo.password,
                 }
@@ -49,7 +77,7 @@ const IssueBoard = ({ userInfo }) => {
             }).catch((error) => {
                 console.error("Fail to fetch Issues : ", error);
                 setIssues(initIssues);
-            })
+            });
         }
         fetchIssues();
     }, [projectId, userInfo]);
@@ -120,26 +148,15 @@ const IssueBoard = ({ userInfo }) => {
     };
 
     const handleNewIssue = () => {
-        //새로운 창을 띄워서 이슈 제목, 중요도를 고르게 한 후.
-        //TODO: 단순 prompt 띄우는 것이 아닌 오른쪽 새로운 대시보드 등장하도록.
-        const title = prompt("New Issue Title:");
-        axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues`, {
-            header : {
-                //contentType json
-            },
-            params : {
-                username: userInfo.username,
-                password: userInfo.password,
-            },
-            body : {
-                title: title,
-            }
-        }).then((response) => {
-            const issueId = response.data;
-            setIssues([...issues, {issueId, title}]);
-        }).catch((error) => {
-            console.error("Fail to fetch Issues : ", error);
-        })
+        setShowNewIssue(true);
+    };
+
+    const handleCloseNewIssue = () => {
+        setShowNewIssue(false);
+    };
+
+    const handleIssueCreated = (newIssue) => {
+        setIssues([...issues, newIssue]);
     };
 
     return (
@@ -240,6 +257,15 @@ const IssueBoard = ({ userInfo }) => {
                     <IssueItem key={issue.id} issue={issue} />
                 ))}
             </div>
+            {showNewIssue && (
+                <NewIssueComponent
+                    userInfo={userInfo}
+                    project={project}
+                    projectId={projectId}
+                    onClose={handleCloseNewIssue}
+                    onIssueCreated={handleIssueCreated}
+                />
+            )}
         </div>
     );
 };
