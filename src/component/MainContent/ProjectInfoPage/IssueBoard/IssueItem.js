@@ -14,9 +14,10 @@ const IssueItem = ({ issue }) => {
     };
 
     const formatAssignees = (assignees) => {
+        console.log(assignees);
         if (Array.isArray(assignees)) {
             return assignees.map((assignee, index) => (
-                <span key={index} className="assignee">{formatUser(assignee)}</span>
+                <span key={index} className="assignee">{formatUser(assignee.username)}</span>
             ));
         }
         return assignees;
@@ -37,7 +38,7 @@ const IssueItem = ({ issue }) => {
                 <span>Reporter: {formatUser(issue.reporter)}</span>
                 <span>Reported Date: {new Date(issue.reportedDate).toLocaleDateString()}</span>
                 <span>Fixer: {formatUser(issue.fixer)}</span>
-                <span>Assignees: {formatAssignees(issue.assignees)}</span>
+                <span>Assignees: {formatUser(issue.assignee)}</span>
                 <span className={`priority ${issue.priority.toLowerCase()}`}>Priority: {issue.priority}</span>
             </div>
         </div>

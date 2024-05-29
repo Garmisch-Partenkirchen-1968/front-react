@@ -74,6 +74,7 @@ const IssueBoard = ({ userInfo }) => {
                 }
             }).then((response) => {
                 setIssues(response.data);
+                console.log(response.data);
             }).catch((error) => {
                 console.error("Fail to fetch Issues : ", error);
                 setIssues(initIssues);

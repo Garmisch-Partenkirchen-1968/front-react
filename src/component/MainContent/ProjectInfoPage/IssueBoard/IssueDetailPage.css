@@ -1,8 +1,3 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
-
 .container {
     max-width: 800px;
     margin: auto;
@@ -16,6 +11,40 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.issue-header h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.status.new {
+    background-color: #007bff;
+}
+
+.status.assigned {
+    background-color: #ff7707;
+}
+
+.status.fixed {
+    background-color: #17a2b8;
+}
+
+.status.resolved {
+    background-color: #28a745;
+}
+
+.status.closed {
+    background-color: #dc3545;
 }
 
 .issue-details {
@@ -24,6 +53,78 @@ body {
 
 .issue-details div {
     margin-bottom: 10px;
+}
+
+.issue-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.issue-meta span {
+    background-color: #f1f1f1;
+    padding: 3px 7px;
+    border-radius: 3px;
+}
+
+.assignee-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.assignee-item {
+    margin-bottom: 5px;
+}
+
+.description-container {
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.description-container button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.description-container button:hover {
+    background-color: #0056b3;
+}
+
+.description {
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.issue-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.issue-item h3 {
+    margin: 0 0 10px 0;
+}
+
+.issue-item p {
+    margin: 5px 0;
+}
+
+.issue-item:hover {
+    background-color: #f9f9f9;
 }
 
 .form-group {
@@ -53,4 +154,29 @@ body {
 
 .form-group button:hover {
     background-color: #218838;
+}
+
+.priority {
+    padding: 3px 7px;
+    border-radius: 3px;
+    color: white;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.priority.critical {
+    background-color: #dc3545;
+}
+
+.priority.high {
+    background-color: #ffc107;
+    color: black;
+}
+
+.priority.medium {
+    background-color: #17a2b8;
+}
+
+.priority.low {
+    background-color: #28a745;
 }

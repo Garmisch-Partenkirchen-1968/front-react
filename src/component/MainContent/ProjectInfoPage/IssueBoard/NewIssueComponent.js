@@ -1,4 +1,3 @@
-// NewIssueComponent.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './NewIssueComponent.css';
@@ -46,10 +45,24 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
         }).then((response) => {
             console.log(response.data);
             const issueId = response.data.id;
-            onIssueCreated({ id: issueId, title: title, description: "", reportedDate: new Date(), reporter: userInfo.username, status: "New", assignee: assignee, priority: priority });
-            onClose();
+
+            // Patch request to assign the issue to the selected assignee
+            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${project.id}/issues/${issueId}`, {
+                username: userInfo.username,
+                password: userInfo.password,
+                assignee: assignee.length > 0 ? assignee[0].username : null,
+                title: null,
+                status: null,
+                priority: null
+            }).then(() => {
+                console.log("Assignee patched successfully");
+                onIssueCreated({ id: issueId, title: title, description: "", reportedDate: new Date(), reporter: userInfo.username, status: "New", assignee: assignee, priority: priority });
+                onClose();
+            }).catch((error) => {
+                console.error("Failed to patch assignee: ", error);
+            });
         }).catch((error) => {
-            console.error("Fail to create Issue : ", error);
+            console.error("Failed to create Issue: ", error);
         });
     };
 

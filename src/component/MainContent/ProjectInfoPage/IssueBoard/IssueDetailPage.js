@@ -8,11 +8,14 @@ const IssueDetailPage = ({ userInfo }) => {
     const [description, setDescription] = useState('');
     const [comment, setComment] = useState('');
     const [status, setStatus] = useState('');
+    const [assignees, setAssignees] = useState([]);
+    const [potentialAssignees, setPotentialAssignees] = useState([]);
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const { projectId, issueId } = useParams();
 
     useEffect(() => {
         fetchIssueDetails();
+        fetchProjectMembers();
     }, []);
 
     const fetchIssueDetails = async () => {
@@ -26,10 +29,34 @@ const IssueDetailPage = ({ userInfo }) => {
             const data = response.data;
             setIssue(data);
             setStatus(data.status);
+            setAssignees(data.assignees || []);
             const descriptionComment = data.comments.find(comment => comment.isDescription);
             setDescription(descriptionComment ? descriptionComment.content : '');
         } catch (error) {
             console.error('Error fetching issue details:', error);
+        }
+    };
+
+    const fetchProjectMembers = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/projects/${projectId}`, {
+                params: {
+                    username: userInfo.username,
+                    password: userInfo.password
+                }
+            });
+            const data = response.data;
+            const members = Object.entries(data.members).map(([key, permission]) => {
+                const userMatch = key.match(/User\(id=(\d+), username=(.+?), password=(.+?)\)/);
+                return { id: userMatch[1], username: userMatch[2], permission: permission };
+            });
+            const devMembers = members.filter(member => {
+                const binaryPermission = member.permission.toString(2).padStart(4, '0');
+                return binaryPermission[3] === '1'; // 4번째 비트 체크 (0-indexed)
+            });
+            setPotentialAssignees(devMembers);
+        } catch (error) {
+            console.error('Error fetching project members:', error);
         }
     };
 
@@ -47,6 +74,7 @@ const IssueDetailPage = ({ userInfo }) => {
         } catch (error) {
             console.error('Error updating description:', error);
         }
+        await fetchIssueDetails();
     };
 
     const addComment = async () => {
@@ -80,6 +108,28 @@ const IssueDetailPage = ({ userInfo }) => {
         }
     };
 
+    const handleAssigneeChange = async (member) => {
+        const updatedAssignees = assignees.includes(member)
+            ? assignees.filter(a => a !== member)
+            : [...assignees, member];
+
+        try {
+            await axios.patch(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
+                username: userInfo.username,
+                password: userInfo.password,
+                assignee: updatedAssignees.length > 0 ? updatedAssignees[0] : null,
+                title: null,
+                status: null,
+                priority: null
+            });
+            alert('Assignee updated successfully');
+            setAssignees(updatedAssignees);
+            fetchIssueDetails();
+        } catch (error) {
+            console.error('Error updating assignee:', error);
+        }
+    };
+
     if (!issue) {
         return <div>Loading...</div>;
     }
@@ -103,6 +153,21 @@ const IssueDetailPage = ({ userInfo }) => {
                     <span><strong>Reported Date:</strong> {new Date(issue.reportedDate).toLocaleString()}</span>
                     <span className={`priority ${issue.priority.toLowerCase()}`}><strong>Priority:</strong> {issue.priority}</span>
                 </div>
+                <span><strong>Assignees:</strong>
+                        <div className="assignee-list">
+                            {potentialAssignees.map(member => (
+                                <div key={member.username} className="assignee-item">
+                                    <input
+                                        type="checkbox"
+                                        id={`assignee-${member.username}`}
+                                        checked={assignees.includes(member.username)}
+                                        onChange={() => handleAssigneeChange(member.username)}
+                                    />
+                                    <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
+                                </div>
+                            ))}
+                        </div>
+                    </span>
                 <div className="description-container">
                     <strong>Description:</strong>
                     {isEditingDescription ? (
