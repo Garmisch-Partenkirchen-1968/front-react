@@ -88,6 +88,7 @@ const ProjectInfoPage = ({ userInfo }) => {
                 projectData={projectData}
                 issueData={issueData} />
             <IssueBoardSummary
+                userInfo={userInfo}
                 issues={issueData}
                 maxIssuesToShow={3}
                 handleViewMore={handleViewMore}

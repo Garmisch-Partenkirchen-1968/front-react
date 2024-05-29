@@ -7,6 +7,7 @@ import ProjectInfoPage from "./component/MainContent/ProjectInfoPage/ProjectInfo
 import ProjectSettingPage from "./component/MainContent/ProjectInfoPage/ProjectComponent/ProjectSettingPage";
 import NewProjectPage from "./component/MainContent/NewProjectPage/NewProjectPage";
 import IssueBoard from "./component/MainContent/ProjectInfoPage/IssueBoard/IssueBoard";
+import IssueDetailPage from "./component/MainContent/ProjectInfoPage/IssueBoard/IssueDetailPage";
 import Layout from "./component/Layout";
 
 const initProjectData = [
@@ -44,6 +45,7 @@ function App() {
                         <Route path="main" element={<MainPage userInfo={userInfo} />} />
                         <Route path="project/:projectId" element={<ProjectInfoPage userInfo={userInfo}/>}/>
                         <Route path="project/:projectId/issueboard" element={<IssueBoard userInfo={userInfo}/>} />
+                        <Route path="project/:projectId/issue/:issueId" element={<IssueDetailPage userInfo={userInfo} />} />
                         <Route path="/project/:projectId/settings" element={<ProjectSettingPage userInfo={userInfo} />} />
                         <Route path="newproject" element={<NewProjectPage userInfo={userInfo}/>} />
                     </Route>

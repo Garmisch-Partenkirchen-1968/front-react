@@ -32,8 +32,11 @@ function LoginPage({ setUserInfo, setIsLogin }) {
                     password: formData.password
                 }
             }).then((response) => {
-                const id = response.data;
+                const id = response.data.id;
                 setUserInfo({ username: formData.username, id: id, password: formData.password });
+                console.log("id : " + id);
+                console.log("login : " + formData.username);
+                console.log("password : " + formData.password);
                 setIsLogin(true); // Set login state to true
             }).catch((error) => {
                 console.error('Login failed:', error);

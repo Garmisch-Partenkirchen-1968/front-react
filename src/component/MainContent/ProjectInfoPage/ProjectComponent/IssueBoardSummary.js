@@ -3,7 +3,7 @@ import './IssueBoardSummary.css';
 import '../IssueBoard/IssueBoard.css';
 import IssueItem from "../IssueBoard/IssueItem";
 
-const IssueBoardSummary = ({ issues, maxIssuesToShow, handleViewMore, handleNewIssue }) => {
+const IssueBoardSummary = ({ issues, maxIssuesToShow, handleViewMore}) => {
     return (
         <div className="issue-board-summary">
             <div className="view-more-container">

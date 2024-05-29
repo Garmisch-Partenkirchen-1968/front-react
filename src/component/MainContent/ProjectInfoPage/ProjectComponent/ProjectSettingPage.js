@@ -10,21 +10,15 @@ const ProjectSettingPage = ({ userInfo }) => {
     const [searchResults, setSearchResults] = useState([]);
     const navigate = useNavigate();
 
-    //TODO : project description 변경하는 로직 추가할 것
-
-
-
-    //
     useEffect(() => {
         axios.get(`http://localhost:8080/projects/${projectId}`, {
             params: {
                 username: userInfo.username,
                 password: userInfo.password,
             },
-        }).then((response) => {
+        }).then(async (response) => {
             const membersData = response.data.members;
-            console.log(membersData);
-            const parsedMembers = Object.entries(membersData).map(([userString, permission]) => {
+            const parsedMembers = Object.entries(membersData).map(([userString]) => {
                 const userMatch = userString.match(/User\(id=(\d+), username=(\w+), password=(.+)\)/);
                 if (userMatch) {
                     const [_, id, username, password] = userMatch;
@@ -32,12 +26,31 @@ const ProjectSettingPage = ({ userInfo }) => {
                         id: parseInt(id, 10),
                         username,
                         password,
-                        permissions: permission
+                        permissions: [false, false, false, false]  // Default permissions until fetched
                     };
                 }
                 return null;
             }).filter(member => member !== null);
-            setMembers(parsedMembers);
+
+            // Fetch permissions for each member
+            const membersWithPermissions = await Promise.all(parsedMembers.map(async (member) => {
+                try {
+                    const permissionResponse = await axios.get(
+                        `http://localhost:8080/projects/${projectId}/permissions/${member.id}`, {
+                            params: {
+                                username: userInfo.username,
+                                password: userInfo.password,
+                            },
+                        }
+                    );
+                    return { ...member, permissions: permissionResponse.data };
+                } catch (error) {
+                    console.error(`Failed to fetch permissions for member ${member.username}:`, error);
+                    return member;
+                }
+            }));
+
+            setMembers(membersWithPermissions);
         }).catch((error) => {
             console.error('Failed to fetch project members:', error);
         });
@@ -58,7 +71,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     };
 
     const handleAddMember = (user) => {
-        const newMember = { ...user, permissions: 1 };
+        const newMember = { ...user, permissions: [false, false, true, true] };
         axios.post(`http://localhost:8080/projects/${projectId}/permissions/${user.id}`, {
             username: userInfo.username,
             password: userInfo.password,
@@ -94,9 +107,10 @@ const ProjectSettingPage = ({ userInfo }) => {
 
     const handleRemoveMember = (delMember) => {
         axios.delete(`http://localhost:8080/projects/${projectId}/permissions/${delMember.id}`, {
-            username: userInfo.username,
-            password: userInfo.password,
-            permissions: delMember.permissions,
+            params: {
+                username: userInfo.username,
+                password: userInfo.password,
+            },
         }).then(() => {
             setMembers(members.filter(member => member.username !== delMember.username));
         }).catch((error) => {
