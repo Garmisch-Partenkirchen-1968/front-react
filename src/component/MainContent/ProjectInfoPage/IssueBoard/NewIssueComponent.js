@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './NewIssueComponent.css';
 
@@ -6,7 +6,8 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
     const [title, setTitle] = useState('');
     const [status, setStatus] = useState('');
     const [assignee, setAssignee] = useState([]);
-    const [priority, setPriority] = useState('');
+    const [priority, setPriority] = useState("MAJOR");
+    const [recommendedAssignees, setRecommendedAssignees] = useState([]);
 
     // Function to check if a member has 'dev' permissions
     const isDev = (permission) => {
@@ -20,6 +21,24 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
         return isDev(permission);
     });
 
+    useEffect(() => {
+        fetchRecommendedAssignees();
+    }, []);
+
+    const fetchRecommendedAssignees = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${project.id}/issues/recommend-assignee`, {
+                params: {
+                    username: userInfo.username,
+                    password: userInfo.password
+                }
+            });
+            setRecommendedAssignees(response.data);
+        } catch (error) {
+            console.error('Error fetching recommended assignees:', error);
+        }
+    };
+
     const handleAssigneeChange = (member) => {
         if (assignee.includes(member)) {
             setAssignee(assignee.filter(a => a !== member));
@@ -29,23 +48,13 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
     };
 
     const handleSubmit = () => {
-        console.log(
-            {
-                username: userInfo.username,
-                password: userInfo.password,
-                title: title,
-                priority: priority
-            }
-        );
         axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/issues`, {
             username: userInfo.username,
             password: userInfo.password,
             title: title,
             priority: priority
         }).then((response) => {
-            console.log(response.data);
             const issueId = response.data.id;
-
             // Patch request to assign the issue to the selected assignee
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${project.id}/issues/${issueId}`, {
                 username: userInfo.username,
@@ -55,7 +64,6 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
                 status: null,
                 priority: null
             }).then(() => {
-                console.log("Assignee patched successfully");
                 onIssueCreated({ id: issueId, title: title, description: "", reportedDate: new Date(), reporter: userInfo.username, status: "New", assignee: assignee, priority: priority });
                 onClose();
             }).catch((error) => {
@@ -79,6 +87,7 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
                 <option value="FIXED">Fixed</option>
                 <option value="RESOLVED">Resolved</option>
                 <option value="CLOSED">Closed</option>
+                <option value="REOPENED">Reopened</option>
             </select>
             <label>Assignee:</label>
             <div className="assignee-list">
@@ -99,13 +108,21 @@ const NewIssueComponent = ({ project, userInfo, onClose, onIssueCreated }) => {
                     );
                 })}
             </div>
+            <div className="recommended-assignees">
+                <h3>Recommended Developers</h3>
+                <ul>
+                    {recommendedAssignees.map(dev => (
+                        <li key={dev.id}>{dev.username}</li>
+                    ))}
+                </ul>
+            </div>
             <label>Priority:</label>
             <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-                <option value="">Select Priority</option>
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
+                <option value="MAJOR">Major</option>
+                <option value="BLOCKER">Blocker</option>
                 <option value="CRITICAL">Critical</option>
+                <option value="MINOR">Minor</option>
+                <option value="TRIVAL">Trival</option>
             </select>
             <button onClick={handleSubmit}>Create Issue</button>
             <button onClick={onClose}>Cancel</button>

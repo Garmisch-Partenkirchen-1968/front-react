@@ -29,7 +29,7 @@ const IssueDetailPage = ({ userInfo }) => {
             const data = response.data;
             setIssue(data);
             setStatus(data.status);
-            setAssignees(data.assignees || []);
+            setAssignees(Array.isArray(data.assignee) ? data.assignee : [data.assignee].filter(Boolean));
             const descriptionComment = data.comments.find(comment => comment.isDescription);
             setDescription(descriptionComment ? descriptionComment.content : '');
         } catch (error) {
@@ -109,18 +109,15 @@ const IssueDetailPage = ({ userInfo }) => {
     };
 
     const handleAssigneeChange = async (member) => {
-        const updatedAssignees = assignees.includes(member)
-            ? assignees.filter(a => a !== member)
-            : [...assignees, member];
+        const updatedAssignees = assignees.includes(member.username)
+            ? assignees.filter(a => a !== member.username)
+            : [...assignees, member.username];
 
         try {
             await axios.patch(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
                 username: userInfo.username,
                 password: userInfo.password,
-                assignee: updatedAssignees.length > 0 ? updatedAssignees[0] : null,
-                title: null,
-                status: null,
-                priority: null
+                assignees: updatedAssignees
             });
             alert('Assignee updated successfully');
             setAssignees(updatedAssignees);
@@ -154,20 +151,20 @@ const IssueDetailPage = ({ userInfo }) => {
                     <span className={`priority ${issue.priority.toLowerCase()}`}><strong>Priority:</strong> {issue.priority}</span>
                 </div>
                 <span><strong>Assignees:</strong>
-                        <div className="assignee-list">
-                            {potentialAssignees.map(member => (
-                                <div key={member.username} className="assignee-item">
-                                    <input
-                                        type="checkbox"
-                                        id={`assignee-${member.username}`}
-                                        checked={assignees.includes(member.username)}
-                                        onChange={() => handleAssigneeChange(member.username)}
-                                    />
-                                    <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
-                                </div>
-                            ))}
-                        </div>
-                    </span>
+                    <div className="assignee-list">
+                        {potentialAssignees.map(member => (
+                            <div key={member.username} className="assignee-item">
+                                <input
+                                    type="checkbox"
+                                    id={`assignee-${member.username}`}
+                                    checked={assignees.includes(member.username)}
+                                    onChange={() => handleAssigneeChange(member)}
+                                />
+                                <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
+                            </div>
+                        ))}
+                    </div>
+                </span>
                 <div className="description-container">
                     <strong>Description:</strong>
                     {isEditingDescription ? (

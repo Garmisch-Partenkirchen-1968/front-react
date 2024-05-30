@@ -47,6 +47,10 @@
     background-color: #dc3545;
 }
 
+.status.reopened {
+    background-color: #5800d9;
+}
+
 .issue-details {
     margin-bottom: 20px;
 }
@@ -159,15 +163,19 @@
     background-color: #dc3545;
 }
 
-.priority.high {
+.priority.major {
     background-color: #ffc107;
     color: black;
 }
 
-.priority.medium {
+.priority.blocker {
     background-color: #17a2b8;
 }
 
-.priority.low {
+.priority.minor {
     background-color: #28a745;
+}
+
+.priority.trival {
+    background-color: #6128a7;
 }

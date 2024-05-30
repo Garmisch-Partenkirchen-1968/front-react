@@ -71,7 +71,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     };
 
     const handleAddMember = (user) => {
-        const newMember = { ...user, permissions: [false, false, true, true] };
+        const newMember = { ...user, permissions: [false, false, false, true] };
         axios.post(`http://localhost:8080/projects/${projectId}/permissions/${user.id}`, {
             username: userInfo.username,
             password: userInfo.password,
@@ -107,10 +107,13 @@ const ProjectSettingPage = ({ userInfo }) => {
 
     const handleRemoveMember = (delMember) => {
         axios.delete(`http://localhost:8080/projects/${projectId}/permissions/${delMember.id}`, {
-            params: {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            data:{
                 username: userInfo.username,
                 password: userInfo.password,
-            },
+            }
         }).then(() => {
             setMembers(members.filter(member => member.username !== delMember.username));
         }).catch((error) => {
