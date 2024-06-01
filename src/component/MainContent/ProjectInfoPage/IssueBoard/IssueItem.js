@@ -6,24 +6,6 @@ const IssueItem = ({ issue }) => {
     const { projectId } = useParams();
     const navigate = useNavigate();
 
-    const formatUser = (user) => {
-        if (typeof user === 'object' && user !== null) {
-            return user.username; // 객체의 username 속성을 사용하여 렌더링
-        }
-        return user;
-    };
-
-    const formatAssignees = (assignees) => {
-        console.log(assignees);
-        if (Array.isArray(assignees)) {
-            return assignees.map((assignee, index) => (
-                <span key={index} className="assignee">{formatUser(assignee.username)}</span>
-            ));
-        }
-        return assignees;
-    };
-
-    // comments 배열에서 isDescription이 true인 항목을 찾아 description으로 설정
     const descriptionComment = (issue.comments || []).find(comment => comment.isDescription);
     const description = descriptionComment ? descriptionComment.content : 'No description provided.';
 
@@ -35,10 +17,10 @@ const IssueItem = ({ issue }) => {
             </div>
             <p className="description">{description}</p>
             <div className="issue-meta">
-                <span>Reporter: {formatUser(issue.reporter)}</span>
-                <span>Reported Date: {new Date(issue.reportedDate).toLocaleDateString()}</span>
-                <span>Fixer: {formatUser(issue.fixer)}</span>
-                <span>Assignees: {formatUser(issue.assignee)}</span>
+                <span>Reporter: {issue.reporter ? issue.reporter.username : 'No Reporter'}</span>
+                <span>Reported Date: {issue.reportedDate ? new Date(issue.reportedDate).toLocaleDateString() : 'No Reported Date'}</span>
+                <span>Fixer: {issue.fixer ? issue.fixer.username : 'No Fixer'}</span>
+                <span>Assignees: {issue.assignee ? issue.assignee.username : 'No Assignee'}</span>
                 <span className={`priority ${issue.priority.toLowerCase()}`}>Priority: {issue.priority}</span>
             </div>
         </div>

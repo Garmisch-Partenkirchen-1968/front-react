@@ -8,14 +8,16 @@ const IssueDetailPage = ({ userInfo }) => {
     const [description, setDescription] = useState('');
     const [comment, setComment] = useState('');
     const [status, setStatus] = useState('');
-    const [assignees, setAssignees] = useState([]);
+    const [assignee, setAssignee] = useState('');
     const [potentialAssignees, setPotentialAssignees] = useState([]);
+    const [recommendedAssignees, setRecommendedAssignees] = useState([]);
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const { projectId, issueId } = useParams();
 
     useEffect(() => {
         fetchIssueDetails();
         fetchProjectMembers();
+        fetchRecommendedAssignees();
     }, []);
 
     const fetchIssueDetails = async () => {
@@ -29,7 +31,7 @@ const IssueDetailPage = ({ userInfo }) => {
             const data = response.data;
             setIssue(data);
             setStatus(data.status);
-            setAssignees(Array.isArray(data.assignee) ? data.assignee : [data.assignee].filter(Boolean));
+            setAssignee(data.assignee?.username || '');
             const descriptionComment = data.comments.find(comment => comment.isDescription);
             setDescription(descriptionComment ? descriptionComment.content : '');
         } catch (error) {
@@ -60,6 +62,21 @@ const IssueDetailPage = ({ userInfo }) => {
         }
     };
 
+    const fetchRecommendedAssignees = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/recommend-assignee`, {
+                params: {
+                    username: userInfo.username,
+                    password: userInfo.password,
+                    priority: issue?.priority
+                }
+            });
+            setRecommendedAssignees(response.data);
+        } catch (error) {
+            console.error('Error fetching recommended assignees:', error);
+        }
+    };
+
     const updateDescription = async () => {
         try {
             await axios.post(`http://localhost:8080/projects/${projectId}/issues/${issueId}/comments`, {
@@ -74,7 +91,6 @@ const IssueDetailPage = ({ userInfo }) => {
         } catch (error) {
             console.error('Error updating description:', error);
         }
-        await fetchIssueDetails();
     };
 
     const addComment = async () => {
@@ -109,18 +125,14 @@ const IssueDetailPage = ({ userInfo }) => {
     };
 
     const handleAssigneeChange = async (member) => {
-        const updatedAssignees = assignees.includes(member.username)
-            ? assignees.filter(a => a !== member.username)
-            : [...assignees, member.username];
-
         try {
             await axios.patch(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
                 username: userInfo.username,
                 password: userInfo.password,
-                assignees: updatedAssignees
+                assignee: member.username
             });
             alert('Assignee updated successfully');
-            setAssignees(updatedAssignees);
+            setAssignee(member.username);
             fetchIssueDetails();
         } catch (error) {
             console.error('Error updating assignee:', error);
@@ -141,6 +153,7 @@ const IssueDetailPage = ({ userInfo }) => {
                     <option value="FIXED">Fixed</option>
                     <option value="RESOLVED">Resolved</option>
                     <option value="CLOSED">Closed</option>
+                    <option value="REOPENED">Reopened</option>
                 </select>
             </div>
             <div className="issue-details">
@@ -150,14 +163,16 @@ const IssueDetailPage = ({ userInfo }) => {
                     <span><strong>Reported Date:</strong> {new Date(issue.reportedDate).toLocaleString()}</span>
                     <span className={`priority ${issue.priority.toLowerCase()}`}><strong>Priority:</strong> {issue.priority}</span>
                 </div>
-                <span><strong>Assignees:</strong>
+                <span><strong>Assignee:</strong>
                     <div className="assignee-list">
                         {potentialAssignees.map(member => (
                             <div key={member.username} className="assignee-item">
                                 <input
-                                    type="checkbox"
+                                    type="radio"
                                     id={`assignee-${member.username}`}
-                                    checked={assignees.includes(member.username)}
+                                    name="assignee"
+                                    value={member.username}
+                                    checked={assignee === member.username}
                                     onChange={() => handleAssigneeChange(member)}
                                 />
                                 <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
@@ -165,6 +180,18 @@ const IssueDetailPage = ({ userInfo }) => {
                         ))}
                     </div>
                 </span>
+                <div className="recommended-assignees">
+                    <h3>Recommended Developers</h3>
+                    {recommendedAssignees.length > 0 ? (
+                        <ul>
+                            {recommendedAssignees.map(dev => (
+                                <li key={dev.id}>{dev.username}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recommended assignees</p>
+                    )}
+                </div>
                 <div className="description-container">
                     <strong>Description:</strong>
                     {isEditingDescription ? (
@@ -190,8 +217,8 @@ const IssueDetailPage = ({ userInfo }) => {
                 <ul>
                     {issue.comments.filter(comment => !comment.isDescription).map((comment, index) => (
                         <li key={index} className="issue-item">
-                            <h3>Comment {index + 1}</h3>
-                            <p>{comment.content} (by {comment.commenter.username})</p>
+                            <h3>{comment.content}</h3>
+                            <p>by {comment.commenter.username} | {new Date(comment.commentedDate).toLocaleString()}</p>
                         </li>
                     ))}
                 </ul>
