@@ -114,9 +114,9 @@ const IssueBoard = ({ userInfo }) => {
         return issuesToFilter.filter(issue => {
             const matchesTitle = !filters.title || (typeof issue.title === 'string' && issue.title.toLowerCase().includes(filters.title.toLowerCase()));
             const matchesDescription = !filters.description || (typeof issue.description === 'string' && issue.description.toLowerCase().includes(filters.description.toLowerCase()));
-            const matchesReporter = !filters.reporter || (typeof issue.reporter === 'string' && issue.reporter.toLowerCase().includes(filters.reporter.toLowerCase()));
-            const matchesFixer = !filters.fixer || (typeof issue.fixer === 'string' && issue.fixer.toLowerCase().includes(filters.fixer.toLowerCase()));
-            const matchesAssignee = !filters.assignee || (typeof issue.assignee === 'string' && issue.assignee.toLowerCase().includes(filters.assignee.toLowerCase()));
+            const matchesReporter = !filters.reporter || (issue.reporter !== null  && issue.reporter.username.toLowerCase().includes(filters.reporter.tolowerCase()));
+            const matchesFixer = !filters.fixer || (issue.fixer !== null && issue.fixer.username.toLowerCase().includes(filters.fixer.toLowerCase()));
+            const matchesAssignee = !filters.assignee || (issue.assignee !== null && issue.assignee.username.toLowerCase().includes(filters.assignee.toLowerCase()));
             const matchesPriority = !filters.priority || issue.priority === filters.priority;
             const matchesStatus = !filters.status || issue.status === filters.status;
             const matchesDateRange = (!filters.startDate || new Date(issue.reportedDate) >= new Date(filters.startDate)) &&
@@ -221,10 +221,11 @@ const IssueBoard = ({ userInfo }) => {
                     onChange={handleFilterChange}
                 >
                     <option value="">All Priorities</option>
-                    <option value="LOW">Low</option>
-                    <option value="MEDIUM">Medium</option>
-                    <option value="HIGH">High</option>
+                    <option value="MAJOR">Major</option>
+                    <option value="BLOCKER">Blocker</option>
                     <option value="CRITICAL">Critical</option>
+                    <option value="MINOR">Minor</option>
+                    <option value="TRIVIAL">Trivial</option>
                 </select>
                 <select
                     name="status"
@@ -237,6 +238,7 @@ const IssueBoard = ({ userInfo }) => {
                     <option value="FIXED">Fixed</option>
                     <option value="RESOLVED">Resolved</option>
                     <option value="CLOSED">Closed</option>
+                    <option value="REOPENED">Reopened</option>
                 </select>
                 <input
                     type="date"

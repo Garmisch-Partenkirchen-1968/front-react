@@ -8,21 +8,23 @@ const IssueDetailPage = ({ userInfo }) => {
     const [description, setDescription] = useState('');
     const [comment, setComment] = useState('');
     const [status, setStatus] = useState('');
+    const [priority, setPriority] = useState('MAJOR');
     const [assignee, setAssignee] = useState('');
-    const [potentialAssignees, setPotentialAssignees] = useState([]);
+    const [projectMembers, setProjectMembers] = useState([]);
     const [recommendedAssignees, setRecommendedAssignees] = useState([]);
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const { projectId, issueId } = useParams();
 
     useEffect(() => {
-        fetchIssueDetails();
         fetchProjectMembers();
-        fetchRecommendedAssignees();
+        fetchIssueDetails().then(() => {
+            fetchRecommendedAssignees();
+        });
     }, []);
 
     const fetchIssueDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues/${issueId}`, {
                 params: {
                     username: userInfo.username,
                     password: userInfo.password
@@ -31,6 +33,8 @@ const IssueDetailPage = ({ userInfo }) => {
             const data = response.data;
             setIssue(data);
             setStatus(data.status);
+            setPriority(data.priority);
+            console.log(data.priority);
             setAssignee(data.assignee?.username || '');
             const descriptionComment = data.comments.find(comment => comment.isDescription);
             setDescription(descriptionComment ? descriptionComment.content : '');
@@ -56,30 +60,29 @@ const IssueDetailPage = ({ userInfo }) => {
                 const binaryPermission = member.permission.toString(2).padStart(4, '0');
                 return binaryPermission[3] === '1'; // 4번째 비트 체크 (0-indexed)
             });
-            setPotentialAssignees(devMembers);
+            setProjectMembers(devMembers);
         } catch (error) {
             console.error('Error fetching project members:', error);
         }
     };
 
     const fetchRecommendedAssignees = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/recommend-assignee`, {
-                params: {
-                    username: userInfo.username,
-                    password: userInfo.password,
-                    priority: issue?.priority
-                }
-            });
+        axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/recommend-assignee`, {
+            params: {
+                username: userInfo.username,
+                password: userInfo.password,
+                priority: priority
+            }
+        }).then((response) => {
             setRecommendedAssignees(response.data);
-        } catch (error) {
+        }).catch((error) => {
             console.error('Error fetching recommended assignees:', error);
-        }
+        });
     };
 
     const updateDescription = async () => {
         try {
-            await axios.post(`http://localhost:8080/projects/${projectId}/issues/${issueId}/comments`, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues/${issueId}/comments`, {
                 username: userInfo.username,
                 password: userInfo.password,
                 content: description,
@@ -95,7 +98,7 @@ const IssueDetailPage = ({ userInfo }) => {
 
     const addComment = async () => {
         try {
-            await axios.post(`http://localhost:8080/projects/${projectId}/issues/${issueId}/comments`, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues/${issueId}/comments`, {
                 username: userInfo.username,
                 password: userInfo.password,
                 content: comment,
@@ -112,7 +115,7 @@ const IssueDetailPage = ({ userInfo }) => {
     const handleStatusChange = async (event) => {
         const newStatus = event.target.value;
         try {
-            await axios.patch(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
+            await axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues/${issueId}`, {
                 username: userInfo.username,
                 password: userInfo.password,
                 status: newStatus
@@ -126,7 +129,7 @@ const IssueDetailPage = ({ userInfo }) => {
 
     const handleAssigneeChange = async (member) => {
         try {
-            await axios.patch(`http://localhost:8080/projects/${projectId}/issues/${issueId}`, {
+            await axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/issues/${issueId}`, {
                 username: userInfo.username,
                 password: userInfo.password,
                 assignee: member.username
@@ -159,38 +162,11 @@ const IssueDetailPage = ({ userInfo }) => {
             <div className="issue-details">
                 <div className="issue-meta">
                     <span><strong>ID:</strong> {issue.id}</span>
-                    <span><strong>Reporter:</strong> {issue.reporter.username}</span>
-                    <span><strong>Reported Date:</strong> {new Date(issue.reportedDate).toLocaleString()}</span>
+                    <span><strong>Reporter:</strong> {issue.reporter ? issue.reporter.username : 'No Reporter'}</span>
+                    <span><strong>Reported Date:</strong> {issue.reportedDate ? new Date(issue.reportedDate).toLocaleString() : 'No Reported Date'}</span>
+                    <span><strong>Fixer:</strong> {issue.fixer ? issue.fixer.username : 'No Fixer'}</span>
+                    <span><strong>Assignee:</strong> {assignee || 'No Assignee'}</span>
                     <span className={`priority ${issue.priority.toLowerCase()}`}><strong>Priority:</strong> {issue.priority}</span>
-                </div>
-                <span><strong>Assignee:</strong>
-                    <div className="assignee-list">
-                        {potentialAssignees.map(member => (
-                            <div key={member.username} className="assignee-item">
-                                <input
-                                    type="radio"
-                                    id={`assignee-${member.username}`}
-                                    name="assignee"
-                                    value={member.username}
-                                    checked={assignee === member.username}
-                                    onChange={() => handleAssigneeChange(member)}
-                                />
-                                <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
-                            </div>
-                        ))}
-                    </div>
-                </span>
-                <div className="recommended-assignees">
-                    <h3>Recommended Developers</h3>
-                    {recommendedAssignees.length > 0 ? (
-                        <ul>
-                            {recommendedAssignees.map(dev => (
-                                <li key={dev.id}>{dev.username}</li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No recommended assignees</p>
-                    )}
                 </div>
                 <div className="description-container">
                     <strong>Description:</strong>
@@ -211,6 +187,40 @@ const IssueDetailPage = ({ userInfo }) => {
                             {description || <em>No description provided.</em>}
                             <button onClick={() => setIsEditingDescription(true)}>Edit</button>
                         </div>
+                    )}
+                </div>
+                <div className="recommended-assignees">
+                    <h3>Recommended Developers</h3>
+                    {recommendedAssignees.length > 0 ? (
+                        <ul>
+                            {recommendedAssignees.map(dev => (
+                                <li key={dev.id}>{dev.username}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recommended assignees</p>
+                    )}
+                </div>
+                <div className="assignee-selection">
+                    <h3>Select Assignee</h3>
+                    {projectMembers.length > 0 ? (
+                        <ul>
+                            {projectMembers.map(member => (
+                                <li key={member.id}>
+                                    <input
+                                        type="radio"
+                                        id={`assignee-${member.username}`}
+                                        name="assignee"
+                                        value={member.username}
+                                        checked={assignee === member.username}
+                                        onChange={() => handleAssigneeChange(member)}
+                                    />
+                                    <label htmlFor={`assignee-${member.username}`}>{member.username}</label>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No available assignees</p>
                     )}
                 </div>
                 <div><strong>Comments:</strong></div>
