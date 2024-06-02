@@ -114,7 +114,7 @@ const IssueBoard = ({ userInfo }) => {
         return issuesToFilter.filter(issue => {
             const matchesTitle = !filters.title || (typeof issue.title === 'string' && issue.title.toLowerCase().includes(filters.title.toLowerCase()));
             const matchesDescription = !filters.description || (typeof issue.description === 'string' && issue.description.toLowerCase().includes(filters.description.toLowerCase()));
-            const matchesReporter = !filters.reporter || (issue.reporter !== null  && issue.reporter.username.toLowerCase().includes(filters.reporter.tolowerCase()));
+            const matchesReporter = !filters.reporter || (issue.reporter !== null  && issue.reporter.username.toLowerCase().includes(filters.reporter.toLowerCase()));
             const matchesFixer = !filters.fixer || (issue.fixer !== null && issue.fixer.username.toLowerCase().includes(filters.fixer.toLowerCase()));
             const matchesAssignee = !filters.assignee || (issue.assignee !== null && issue.assignee.username.toLowerCase().includes(filters.assignee.toLowerCase()));
             const matchesPriority = !filters.priority || issue.priority === filters.priority;
