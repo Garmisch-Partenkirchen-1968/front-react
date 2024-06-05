@@ -1,3 +1,31 @@
+# GarmISSUE Front React Web 실행 방법
+
+
+## 환경변수 설정 파일 생성 및 내용 작성
+
+.env 파일을 root dir에 생성.
+```
+REACT_APP_API_URL = "http://localhost:8080"
+```
+
+npm 설치 후, 실행
+
+```bash
+sudo npm install
+sudo npm start
+```
+
+## Build
+
+빌드를 위해서는 다음 명령어를 입력하면 됨.
+
+```bash
+sudo npm run build
+```
+이후 해당 build파일을 웹 서버를 통해 실행.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
