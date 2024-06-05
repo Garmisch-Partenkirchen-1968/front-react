@@ -11,7 +11,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/projects/${projectId}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}`, {
             params: {
                 username: userInfo.username,
                 password: userInfo.password,
@@ -36,7 +36,7 @@ const ProjectSettingPage = ({ userInfo }) => {
             const membersWithPermissions = await Promise.all(parsedMembers.map(async (member) => {
                 try {
                     const permissionResponse = await axios.get(
-                        `http://localhost:8080/projects/${projectId}/permissions/${member.id}`, {
+                        `${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${member.id}`, {
                             params: {
                                 username: userInfo.username,
                                 password: userInfo.password,
@@ -57,7 +57,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     }, [projectId, userInfo]);
 
     const handleSearchUsers = () => {
-        axios.get(`http://localhost:8080/users`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/users`, {
             params: {
                 keyword: searchQuery,
                 username: userInfo.username,
@@ -72,7 +72,7 @@ const ProjectSettingPage = ({ userInfo }) => {
 
     const handleAddMember = (user) => {
         const newMember = { ...user, permissions: [false, false, false, true] };
-        axios.post(`http://localhost:8080/projects/${projectId}/permissions/${user.id}`, {
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${user.id}`, {
             username: userInfo.username,
             password: userInfo.password,
             permissions: newMember.permissions
@@ -92,7 +92,7 @@ const ProjectSettingPage = ({ userInfo }) => {
         const updatedPermissions = [...member.permissions];
         updatedPermissions[permissionIndex] = !updatedPermissions[permissionIndex];
 
-        axios.patch(`http://localhost:8080/projects/${projectId}/permissions/${member.id}`, {
+        axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${member.id}`, {
             username: userInfo.username,
             password: userInfo.password,
             permissions: updatedPermissions,
@@ -106,7 +106,7 @@ const ProjectSettingPage = ({ userInfo }) => {
     };
 
     const handleRemoveMember = (delMember) => {
-        axios.delete(`http://localhost:8080/projects/${projectId}/permissions/${delMember.id}`, {
+        axios.delete(`${process.env.REACT_APP_API_URL}/projects/${projectId}/permissions/${delMember.id}`, {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8'
             },
